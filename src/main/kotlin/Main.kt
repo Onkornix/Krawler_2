@@ -1,57 +1,96 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import kotlin.random.Random
+
+
+var health = 100
+var damage = 100
+var level = 0
+val inventory = mutableMapOf<ItemPools.Item, Int>()
 fun main() {
-    val player = Player(
-        name = "dylan"
-    )
 
-    while (player.health > 0) {
 
+    var game = true
+    var shopCounter = Random.nextInt(from = 5, until = 10)
+    while (game) {
         val enemy = newEnemy()
+        val enounter = fight(enemy)
 
-        while (enemy.health > 0) {
-            print("your move: [ (a) Attack, (i) Inventory, (f) Flee, (s) stats]\n> ")
-            val response = readln()
+        if (enounter) {
+            lootEnemy(enemy)
+        }
 
-            when (response) {
-                "a" -> attack(player,enemy)
-                "i" -> {
-                    openInventory(player)
-                    continue
-                }
-                "f" -> {
-                    if (attemptFlee(enemy)) {
-                        break
-                    }
-                }
-                "s" -> {
-                    printStats(player)
-                    continue
-                }
-            }
-
-            println("health remaining: ${enemy.health}")
-
-            println("The ${enemy.type} hits you for ${enemy.damage}\n")
+        if (health <= 0) {
+            game = false
+        }
+        if (shopCounter == 0) {
+            TODO()
+            // shopCounter = Random.nextInt(until = 10)
+        } else {
+            shopCounter--
         }
     }
 }
-fun attack(player: Player, enemy: Enemy) {
 
-    enemy.health -= player.damage
+fun lootEnemy(enemy: Enemy) {
+
+    for (item in enemy.loot()) {
+        if (inventory[item] == null) {
+            inventory[item] = 1
+        } else {
+            inventory[item] = inventory[item]!!.inc()
+        }
+    }
 
 }
 
-fun openInventory(player: Player) {
+fun fight(enemy: Enemy): Boolean {
+    while (enemy.health > 0 && health > 0) {
 
+        print("your move: [ (a) Attack, (i) Inventory, (f) Flee, (s) stats]\n> ")
+        val response = readln()
+
+        when (response) {
+            "a" -> attack(enemy)
+            "i" -> {
+                openInventory()
+                continue
+            }
+            "f" -> {
+                if (attemptFlee(enemy)) {
+                    break
+                }
+            }
+            "s" -> {
+                printStats()
+                continue
+            }
+        }
+
+        println("health remaining: ${enemy.health}")
+
+        println("The ${enemy.type} hits you for ${enemy.damage}\n")
+    }
+    return health > 0
+}
+
+fun attack(enemy: Enemy) {
+
+    enemy.health -= damage
+
+}
+
+fun openInventory() {
+    for (item in inventory.keys) {
+        println("${item.stats.name}: ${inventory[item]}")
+    }
+    //Add good formatting and using items
 }
 
 fun attemptFlee(enemy: Enemy): Boolean {
-    return true
+    TODO()
 }
 
-fun printStats(player: Player) {
-    println()
+fun printStats() {
+    TODO()
 }
 
 fun newEnemy(): Enemy {

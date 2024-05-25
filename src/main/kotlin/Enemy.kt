@@ -1,35 +1,39 @@
 
 class Enemy {
-    enum class Enemies {
-        Goblin, /*Trenton*/
+    enum class Enemies(val stats: EnemyStats.Stats) {
+        Goblin(EnemyStats.goblin), Trenton(EnemyStats.trenton)
     }
-
-    private val statsMap = mutableMapOf(
-        Enemies.Goblin to EnemyStats.Goblin,
-        //Enemies.Trenton to EnemyStats.Trenton
-    )
 
     var health: Int
     val damage: Int
-    private val drops: Int
-    private val dropPool: EnemyStats.Pools
+    val dropCount: Int
+    private val dropPool: ItemPools.Pool
     private val xp: Int
 
     val type: Enemies
 
     init {
-        type = rollEnemyType()
-        val stats = statsMap[type]!!
+        type = chooseEnemy()
+        val stats = type.stats
 
         health = stats.health
         damage = stats.damage
-        drops = stats.drops
+        dropCount = stats.dropCount
         dropPool = stats.dropPool
         xp = stats.xp
 
     }
 
-    private fun rollEnemyType(): Enemies {
+    private fun chooseEnemy(): Enemies {
         return Enemies.Goblin
+    }
+    fun loot(): List<ItemPools.Item> {
+        val loot = mutableListOf<ItemPools.Item>()
+        loot.run {
+            for (i in (0..<dropCount)) {
+                this.add(dropPool.rarity.random())
+            }
+        }
+        return loot
     }
 }
