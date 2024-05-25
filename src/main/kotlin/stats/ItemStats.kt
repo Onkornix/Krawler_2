@@ -1,3 +1,5 @@
+package stats
+
 object ItemStats {
     class Stats(
         val name: String,

@@ -1,10 +1,12 @@
+import stats.EquipmentStats
 import kotlin.random.Random
 
 
 var health = 100
 var damage = 100
 var level = 0
-val inventory = mutableMapOf<ItemPools.Item, Int>()
+val inventory = mutableMapOf<Items.Item, Int>()
+val equipment = mutableMapOf<EquipmentStats.Slot,Equipment.Equipment>()
 fun main() {
 
 
@@ -45,8 +47,12 @@ fun lootEnemy(enemy: Enemy) {
 fun fight(enemy: Enemy): Boolean {
     while (enemy.health > 0 && health > 0) {
 
-        print("your move: [ (a) Attack, (i) Inventory, (f) Flee, (s) stats]\n> ")
+        print("your move: [ (a) Attack, (f) Flee, (i) Inventory, (e) Equipment, (s) stats, ]\n> ")
         val response = readln()
+            .trim()
+            .lowercase()
+            .filter { listOf('a','f','i','e','s').contains(it) }
+            .run { while (this.length > 1) { this.dropLast(1) }; this}
 
         when (response) {
             "a" -> attack(enemy)
@@ -82,7 +88,9 @@ fun openInventory() {
     for (item in inventory.keys) {
         println("${item.stats.name}: ${inventory[item]}")
     }
-    //Add good formatting and using items
+
+
+
 }
 
 fun attemptFlee(enemy: Enemy): Boolean {

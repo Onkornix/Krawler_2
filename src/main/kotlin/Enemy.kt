@@ -1,3 +1,4 @@
+import stats.EnemyStats
 
 class Enemy {
     enum class Enemies(val stats: EnemyStats.Stats) {
@@ -7,7 +8,7 @@ class Enemy {
     var health: Int
     val damage: Int
     val dropCount: Int
-    private val dropPool: ItemPools.Pool
+    private val dropPool: Items.Pool
     private val xp: Int
 
     val type: Enemies
@@ -27,11 +28,11 @@ class Enemy {
     private fun chooseEnemy(): Enemies {
         return Enemies.Goblin
     }
-    fun loot(): List<ItemPools.Item> {
-        val loot = mutableListOf<ItemPools.Item>()
+    fun loot(): List<Items.Item> {
+        val loot = mutableListOf<Items.Item>()
         loot.run {
             for (i in (0..<dropCount)) {
-                this.add(dropPool.rarity.random())
+                this.add(dropPool.pool.random())
             }
         }
         return loot

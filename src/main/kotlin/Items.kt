@@ -1,6 +1,8 @@
-object ItemPools {
+import stats.ItemStats
 
-    enum class Pool(val rarity: List<Item>) {
+object Items {
+
+    enum class Pool(val pool: List<Item>) {
         Simple(simple), Tough(tough), Heroic(heroic), Unmatched(unmatched)
     }
     enum class Item(val stats: ItemStats.Stats) {
